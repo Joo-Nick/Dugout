@@ -8,18 +8,15 @@
     <fragment
         android:id="@+id/navigation_matching"
         android:name="com.example.dugout.ui.Matching.MatchingFragment"
-        android:label="@string/title_matching"
         tools:layout="@layout/fragment_matching" />
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.dugout.ui.Profile.ProfileFragment"
-        android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_chat"
         android:name="com.example.dugout.ui.Chat.ChatFragment"
-        android:label="@string/title_chat"
         tools:layout="@layout/fragment_chat" />
 </navigation>
