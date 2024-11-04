@@ -6,8 +6,4 @@ import androidx.lifecycle.ViewModel
 
 class MatchingViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "Matching Fragment"
-    }
-    val text: LiveData<String> = _text
 }

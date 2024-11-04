@@ -3,4 +3,29 @@
     <string name="title_matching">Matching</string>
     <string name="title_profile">Profile</string>
     <string name="title_chat">Chat</string>
+
+    <string-array name="gender_options">
+        <item>성별</item>
+        <item>남성</item>
+        <item>여성</item>
+    </string-array>
+
+    <string-array name="date_options">
+        <item>날짜</item>
+        <item>최신순</item>
+        <item>오래된순</item>
+    </string-array>
+
+    <string-array name="rating_options">
+        <item>평점</item>
+        <item>높은순</item>
+        <item>낮은순</item>
+    </string-array>
+
+    <string-array name="ticket_options">
+        <item>티켓</item>
+        <item>보유</item>
+        <item>미보유</item>
+    </string-array>
+
 </resources>
