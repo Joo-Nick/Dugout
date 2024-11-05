@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.EnterInformation.EnterInformationFragment">
+
+    <!-- 뒤로 가기 버튼 -->
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_left_arrow"
+        android:contentDescription="뒤로 가기"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- 캘린더 뷰 -->
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/backButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- 구장 선택 Spinner -->
+    <Spinner
+        android:id="@+id/spinnerStadiums"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/calendarView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- 구장 텍스트 -->
+    <TextView
+        android:id="@+id/textStadiumSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="선택된 구장: 없음"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/spinnerStadiums"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <!-- 선택한 날짜 텍스트 -->
+
+    <!-- 티켓 유무 텍스트 -->
+
+    <TextView
+        android:id="@+id/textDateSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="선택된 날짜: 없음"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textStadiumSelect" />
+
+    <TextView
+        android:id="@+id/textTicketStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="티켓 유무"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/textDateSelect"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp" />
+
+    <!-- 티켓 유무 라디오 버튼 그룹 -->
+    <RadioGroup
+        android:id="@+id/radioGroupTicket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="@id/textTicketStatus"
+        app:layout_constraintBottom_toBottomOf="@id/textTicketStatus"
+        app:layout_constraintStart_toEndOf="@id/textTicketStatus"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp">
+
+        <RadioButton
+            android:id="@+id/radioTicketYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예" />
+
+        <RadioButton
+            android:id="@+id/radioTicketNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="아니요" />
+    </RadioGroup>
+
+    <!-- 성별 텍스트 -->
+    <TextView
+        android:id="@+id/textGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="성        별"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/textTicketStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp" />
+
+    <!-- 성별 라디오 버튼 그룹 -->
+    <RadioGroup
+        android:id="@+id/radioGroupGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="@id/textGender"
+        app:layout_constraintBottom_toBottomOf="@id/textGender"
+        app:layout_constraintStart_toEndOf="@id/textGender"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp">
+
+        <RadioButton
+            android:id="@+id/radioGenderMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="남자" />
+
+        <RadioButton
+            android:id="@+id/radioGenderFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여자" />
+    </RadioGroup>
+
+    <!-- 등록 버튼 -->
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="신청하기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="52dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
