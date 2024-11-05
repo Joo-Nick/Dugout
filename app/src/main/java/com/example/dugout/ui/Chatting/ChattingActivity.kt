@@ -1,40 +1,42 @@
 package com.example.dugout.ui.Chatting
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.dugout.databinding.FragmentChatBinding
-import com.example.dugout.databinding.FragmentChattingBinding
-import com.example.dugout.ui.Chat.ChatViewModel
+import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.dugout.R
 
-class ChattingFragment : Fragment() {
+class ChattingActivity : AppCompatActivity() {
+    private lateinit var chattingRecyclerView: RecyclerView
+    private lateinit var chattingAdapter: ChattingAdapter
+    private lateinit var messageList: ArrayList<String>
+    private lateinit var messageInput: EditText
 
-    private var _binding: FragmentChattingBinding? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chatting)
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+        chattingRecyclerView = findViewById(R.id.rcc_chatting)
+        messageInput = findViewById(R.id.edt_input)
+        val sendButton = findViewById<Button>(R.id.btn_send)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val chattingViewModel =
-            ViewModelProvider(this).get(ChattingViewModel::class.java)
+        messageList = ArrayList()
+        chattingAdapter = ChattingAdapter(messageList)
+        chattingRecyclerView.layoutManager = LinearLayoutManager(this)
+        chattingRecyclerView.adapter = chattingAdapter
 
-        _binding = FragmentChattingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        sendButton.setOnClickListener {
+            val message = messageInput.text.toString().trim()
+            if (message.isNotEmpty()) {
+                messageList.add(message)
+                chattingAdapter.notifyItemInserted(messageList.size - 1)
+                chattingRecyclerView.scrollToPosition(messageList.size - 1)
+                messageInput.setText("")
+                Log.d("ChattingActivity", "Current messages: $messageList")
+            }
+        }
     }
 }

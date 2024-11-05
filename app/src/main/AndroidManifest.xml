@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Splash"
         tools:targetApi="31">
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -22,6 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.Chatting.ChattingActivity"
+            android:theme = "@style/AppTheme.Splash"/>
     </application>
 
 </manifest>
