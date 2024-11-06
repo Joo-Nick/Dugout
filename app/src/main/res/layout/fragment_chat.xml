@@ -15,7 +15,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="채팅"
+        android:text="채 팅"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"

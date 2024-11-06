@@ -37,7 +37,7 @@
             android:id="@+id/textChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="최신 채팅"
+            android:text="최신채팅"
             android:textSize="14sp"
             android:layout_marginTop="4dp" />
     </LinearLayout>

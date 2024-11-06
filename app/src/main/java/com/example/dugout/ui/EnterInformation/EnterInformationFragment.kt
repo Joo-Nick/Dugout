@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.dugout.R
-import com.example.dugout.databinding.FragmentEnterInformationBinding
+import com.example.dugout.databinding.FragmentEnterInformationBinding //
 
 class EnterInformationFragment : Fragment() {
     private var _binding: FragmentEnterInformationBinding? = null
@@ -28,7 +28,7 @@ class EnterInformationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         enterInformationViewModel = ViewModelProvider(this).get(EnterInformationViewModel::class.java)
-        _binding = FragmentEnterInformationBinding.inflate(inflater, container, false)
+        _binding = FragmentEnterInformationBinding.inflate(inflater, container, false) //
         val root: View = binding.root
 
         // 뒤로 가기 버튼 설정

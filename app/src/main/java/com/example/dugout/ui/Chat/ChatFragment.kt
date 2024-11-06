@@ -24,7 +24,7 @@ class ChatFragment : Fragment() {
         Chat("이주은", "다음에 또 봐요:)", "1일 전", R.drawable.leejoon),
         Chat("오타니 쇼헤이", "한국 야구 재밌어요!", "3일 전", R.drawable.othani),
         Chat("김도영", "다음 번에는 제가 가보겠습니다~", "3일 전", R.drawable.kimdo0),
-        Chat("하지원", "다음에도 같이 볼래요?", "일주일 전", R.drawable.hajiwon)
+        Chat("하지원", "다음에도 같이 볼래요?", "일주일 전", R.drawable.hajiwon) //
     )
 
     private val chatRequestList = mutableListOf(

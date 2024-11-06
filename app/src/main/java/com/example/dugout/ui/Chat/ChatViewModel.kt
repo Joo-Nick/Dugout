@@ -19,7 +19,7 @@ class ChatViewModel : ViewModel() {
         _chatRequests.value = listOf(
             Chat("김정원", "수락 대기 중", "", R.drawable.kimjungwon),
             Chat("박담비", "수락 대기 중", "", R.drawable.dambi),
-            Chat("구자욱", "수락 대기 중", "", R.drawable.koojawook)
+            Chat("구자욱", "수락 대기 중", "", R.drawable.koojawook) //
         )
     }
 

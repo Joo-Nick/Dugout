@@ -19,7 +19,7 @@ class ChatRequestAdapter(
         val profileImage: ImageView = itemView.findViewById(R.id.profileImageRequest)
         val textName: TextView = itemView.findViewById(R.id.textNameRequest)
         val acceptButton: Button = itemView.findViewById(R.id.acceptButton)
-        val declineButton: Button = itemView.findViewById(R.id.declineButton)
+        val declineButton: Button = itemView.findViewById(R.id.declineButton) //
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatRequestViewHolder {

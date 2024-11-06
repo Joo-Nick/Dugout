@@ -1,4 +1,4 @@
-package com.example.dugout.ui.Chat
+package com.example.dugout.ui.Chat //
 
 import android.view.LayoutInflater
 import android.view.View

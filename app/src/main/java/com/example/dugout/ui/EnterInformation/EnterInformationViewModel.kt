@@ -14,6 +14,6 @@ class EnterInformationViewModel : ViewModel() {
     }
 
     fun submitInformation(stadium: String, hasTicket: Boolean?, gender: String, date: Long) {
-        println("정보 등록: 경기장 = $stadium, 티켓 = $hasTicket, 성별 = $gender, 날짜 = $date")
+        println("정보 등록: 경기장 = $stadium, 티켓 = $hasTicket, 성별 = $gender, 날짜 = $date")//
     }
 }
