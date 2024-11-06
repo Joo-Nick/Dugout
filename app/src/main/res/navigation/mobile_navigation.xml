@@ -37,9 +37,9 @@
         android:id="@+id/enterInformationFragment"
         android:name="com.example.dugout.ui.EnterInformation.EnterInformationFragment"
         android:label="Enter Information Fragment"
-        tools:layout="@layout/fragment_enter_information" >
+        tools:layout="@layout/fragment_enter_information">
 
-        <!-- EnterInformationFragment에서 ChatFragment로 돌아가는 액션  -->
+        <!-- EnterInformationFragment에서 ChatFragment로 돌아가는 액션 추가 -->
         <action
             android:id="@+id/action_enterInformationFragment_to_chatFragment"
             app:destination="@id/navigation_chat" />
