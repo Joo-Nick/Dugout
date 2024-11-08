@@ -24,6 +24,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@color/white"
                     android:entries="@array/gender_options" />
 
                 <Spinner
@@ -32,6 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
+                    android:background="@color/white"
                     android:entries="@array/date_options" />
 
                 <Spinner
@@ -40,6 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
+                    android:background="@color/white"
                     android:entries="@array/rating_options" />
 
                 <Spinner
@@ -48,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
+                    android:background="@color/white"
                     android:entries="@array/ticket_options" />
 
             </LinearLayout>

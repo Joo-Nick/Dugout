@@ -1,11 +1,14 @@
 package com.example.dugout.ui.Matching
 
+import android.annotation.SuppressLint
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.dugout.R
 
 class MatchingAdapter(private val itemList: List<MatchingItem>,private val itemClickListener: (MatchingItem) -> Unit) : RecyclerView.Adapter<MatchingAdapter.MatchingViewHolder>(){
@@ -25,11 +28,22 @@ class MatchingAdapter(private val itemList: List<MatchingItem>,private val itemC
         val ratingText: TextView = view.findViewById(R.id.rating_text)
         val messageText: TextView = view.findViewById(R.id.message_text)
 
+        @SuppressLint("DiscouragedApi")
         fun bind(item: MatchingItem) {
             nameText.text = item.name
             ratingText.text = "평점 ${item.rating} / 5"
             messageText.text = item.message
-            profileImage.setImageResource(item.profileImageRes)
+
+            val resourceId = profileImage.context.resources.getIdentifier(
+                item.profileImageRes,
+                "drawable",
+                profileImage.context.packageName
+            )
+
+            Glide.with(profileImage.context)
+                .load(resourceId)
+                .placeholder(R.drawable.leejoon) // 기본 이미지 설정
+                .into(profileImage)
 
         }
     }

@@ -9,6 +9,7 @@ import android.widget.Spinner
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dugout.MainActivity
@@ -19,55 +20,48 @@ class MatchingFragment : Fragment() {
 
     private var _binding: FragmentMatchingBinding? = null
     private val binding get() = _binding!!
+    private val matchingViewModel: MatchingViewModel by viewModels()
     private var itemList = mutableListOf<MatchingItem>()
+    private lateinit var adapter: MatchingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val matchingViewModel = ViewModelProvider(this).get(MatchingViewModel::class.java)
-
         _binding = FragmentMatchingBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // 더미 데이터
-        itemList = mutableListOf(
-            MatchingItem(R.drawable.yoon_small, "윤동희", 4.9, "롯데 응원하는 분 같이 보러가요~~"),
-            MatchingItem(R.drawable.kimdo0, "김도영", 4.8, "삼성 팬들 함께 응원합시다!"),
-            MatchingItem(R.drawable.elwha, "최홍라", 5.0, "롯데 팬인데 같이 갈 사람 구해요!"),
-            MatchingItem(R.drawable.leejoon, "이주은", 4.5, "같이 갈 사람 구해요!"),
-            MatchingItem(R.drawable.dambi, "박담비", 4.4, "담비에유!"),
-            MatchingItem(R.drawable.othani, "오타니 쇼헤이", 4.1, "일본 팬인데 같이 갈 사람 구해요! 연락 주세요."),
-            MatchingItem(R.drawable.hajiwon, "하지원", 4.3, "한화 팬인데 같이 갈 사람 구해요! 나는 행복합니다~~"),
-            MatchingItem(R.drawable.kimjungwon, "김정원", 4.0, "nc 팬인데 같이 갈 사람 구해요!"),
-            MatchingItem(R.drawable.yoon_small, "구자욱", 3.0, "삼성 팬인데 같이 갈 사람 구해요! 삼성의 보물 내야수 김영웅 파이팅"),
-            MatchingItem(R.drawable.yoon_small, "구자욱", 2.0, "삼성 팬인데 같이 갈 사람 구해요! 삼성의 보물 내야수 김영웅 파이팅")
+        setupRecyclerView()
+        setupSpinners()
+        observeViewModel()
 
-        )
+        return root
+    }
 
-        // 어댑터 초기화
-        val adapter = MatchingAdapter(itemList) { _ ->
-        }
-        adapter.setMyItemClickListener(object: MatchingAdapter.MyItemClickListener{
+    private fun setupRecyclerView(){
+        adapter = MatchingAdapter(itemList) { _ -> }
+
+        adapter.setMyItemClickListener(object : MatchingAdapter.MyItemClickListener {
             override fun onItemClick() {
                 (context as MainActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main,MatchingProfileFragment())
+                    .replace(R.id.nav_host_fragment_activity_main, MatchingProfileFragment())
                     .addToBackStack(null)
                     .commit()
             }
         })
 
+        // RecyclerView에 어댑터와 레이아웃 매니저 설정
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
+    }
 
-        // 스피너 설정
-        val spinner: Spinner = binding.ratingSpinner
+    private fun setupSpinner(spinner: Spinner, arrayResource: Int, onItemSelected: (Int) -> Unit) {
         ArrayAdapter.createFromResource(
             requireContext(),
-            R.array.rating_options,
+            arrayResource,
             android.R.layout.simple_spinner_item
-        ).also{ arrayAdapter ->
+        ).also { arrayAdapter ->
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = arrayAdapter
         }
@@ -80,26 +74,77 @@ class MatchingFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                when (position) {
-                    1 -> {
-                        // 높은 평점 순
-                        itemList.sortByDescending { it.rating }
-                    }
-
-                    2 -> {
-                        // 낮은 평점 순
-                        itemList.sortBy { it.rating }
-                    }
-                }
-                adapter.notifyDataSetChanged()
+                onItemSelected(position)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // 기본 동작 없음
             }
         }
+    }
 
-        return root
+
+    private fun setupSpinners() {
+        // 평점 정렬 Spinner 설정
+        setupSpinner(
+            binding.ratingSpinner,
+            R.array.rating_options,
+            onItemSelected = { position ->
+                when (position) {
+                    1 -> matchingViewModel.loadItemsByRatingDesc()  // 높은 평점 순
+                    2 -> matchingViewModel.loadItemsByRatingAsc()   // 낮은 평점 순
+                }
+            }
+        )
+
+        // 성별 필터 Spinner 설정
+        setupSpinner(
+            binding.genderSpinner,
+            R.array.gender_options,
+            onItemSelected = { position ->
+                when (position) {
+                    1 -> matchingViewModel.loadItemsByGender("M")  // 남성만
+                    2 -> matchingViewModel.loadItemsByGender("F")  // 여성만
+                    else -> matchingViewModel.loadItemsByGender(null) // 전체
+                }
+            }
+        )
+
+        // 티켓 유무 필터 Spinner 설정
+        setupSpinner(
+            binding.ticketSpinner,
+            R.array.ticket_options,
+            onItemSelected = { position ->
+                when (position) {
+                    1 -> matchingViewModel.loadItemsByTicketAvailability(true)  // 티켓 소지자
+                    2 -> matchingViewModel.loadItemsByTicketAvailability(false) // 티켓 미소지자
+                    else -> matchingViewModel.loadItemsByTicketAvailability(null) // 전체
+                }
+            }
+        )
+
+        // 날짜 정렬 Spinner 설정
+        setupSpinner(
+            binding.dateSpinner,
+            R.array.date_options,
+            onItemSelected = { position ->
+                when (position) {
+                    1 -> matchingViewModel.loadItemsByDateAsc()   // 오래된 순
+                    2 -> matchingViewModel.loadItemsByDateDesc()  // 최신 순
+                }
+            }
+        )
+    }
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeViewModel(){
+        matchingViewModel.matchingItems.observe(viewLifecycleOwner) { items ->
+            itemList.clear()
+            itemList.addAll(items)
+            adapter.    notifyDataSetChanged()
+        }
+
     }
 
     override fun onDestroyView() {
