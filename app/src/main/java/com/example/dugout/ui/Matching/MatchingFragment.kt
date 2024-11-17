@@ -35,23 +35,20 @@ class MatchingFragment : Fragment() {
         setupRecyclerView()
         setupSpinners()
         observeViewModel()
+        matchingViewModel.loadAllItems()
 
         return root
     }
 
     private fun setupRecyclerView(){
-        adapter = MatchingAdapter(itemList) { _ -> }
+        adapter = MatchingAdapter(itemList) { item ->
+            val fragment = MatchingProfileFragment.newInstance(item)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
 
-        adapter.setMyItemClickListener(object : MatchingAdapter.MyItemClickListener {
-            override fun onItemClick() {
-                (context as MainActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main, MatchingProfileFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
-        })
-
-        // RecyclerView에 어댑터와 레이아웃 매니저 설정
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
     }
@@ -85,18 +82,6 @@ class MatchingFragment : Fragment() {
 
 
     private fun setupSpinners() {
-        // 평점 정렬 Spinner 설정
-        setupSpinner(
-            binding.ratingSpinner,
-            R.array.rating_options,
-            onItemSelected = { position ->
-                when (position) {
-                    1 -> matchingViewModel.loadItemsByRatingDesc()  // 높은 평점 순
-                    2 -> matchingViewModel.loadItemsByRatingAsc()   // 낮은 평점 순
-                }
-            }
-        )
-
         // 성별 필터 Spinner 설정
         setupSpinner(
             binding.genderSpinner,
@@ -105,20 +90,7 @@ class MatchingFragment : Fragment() {
                 when (position) {
                     1 -> matchingViewModel.loadItemsByGender("M")  // 남성만
                     2 -> matchingViewModel.loadItemsByGender("F")  // 여성만
-                    else -> matchingViewModel.loadItemsByGender(null) // 전체
-                }
-            }
-        )
-
-        // 티켓 유무 필터 Spinner 설정
-        setupSpinner(
-            binding.ticketSpinner,
-            R.array.ticket_options,
-            onItemSelected = { position ->
-                when (position) {
-                    1 -> matchingViewModel.loadItemsByTicketAvailability(true)  // 티켓 소지자
-                    2 -> matchingViewModel.loadItemsByTicketAvailability(false) // 티켓 미소지자
-                    else -> matchingViewModel.loadItemsByTicketAvailability(null) // 전체
+                    else -> matchingViewModel.loadAllItems() // 전체
                 }
             }
         )
@@ -131,6 +103,33 @@ class MatchingFragment : Fragment() {
                 when (position) {
                     1 -> matchingViewModel.loadItemsByDateAsc()   // 오래된 순
                     2 -> matchingViewModel.loadItemsByDateDesc()  // 최신 순
+                    else -> matchingViewModel.loadAllItems() // 전체
+                }
+            }
+        )
+
+        // 평점 정렬 Spinner 설정
+        setupSpinner(
+            binding.ratingSpinner,
+            R.array.rating_options,
+            onItemSelected = { position ->
+                when (position) {
+                    1 -> matchingViewModel.loadItemsByRatingDesc()  // 높은 평점 순
+                    2 -> matchingViewModel.loadItemsByRatingAsc()   // 낮은 평점 순
+                    else -> matchingViewModel.loadAllItems() // 전체
+                }
+            }
+        )
+
+        // 티켓 유무 필터 Spinner 설정
+        setupSpinner(
+            binding.ticketSpinner,
+            R.array.ticket_options,
+            onItemSelected = { position ->
+                when (position) {
+                    1 -> matchingViewModel.loadItemsByTicketAvailability(true)  // 티켓 소지자
+                    2 -> matchingViewModel.loadItemsByTicketAvailability(false) // 티켓 미소지자
+                    else -> matchingViewModel.loadAllItems() // 전체
                 }
             }
         )
@@ -142,7 +141,7 @@ class MatchingFragment : Fragment() {
         matchingViewModel.matchingItems.observe(viewLifecycleOwner) { items ->
             itemList.clear()
             itemList.addAll(items)
-            adapter.    notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
         }
 
     }

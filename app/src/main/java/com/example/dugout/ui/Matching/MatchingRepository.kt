@@ -3,20 +3,45 @@ package com.example.dugout.ui.Matching
 import android.util.Log
 import com.example.dugout.R
 import com.google.firebase.Firebase
+import com.google.firebase.database.childEvents
 import com.google.firebase.database.database
 import kotlinx.coroutines.tasks.await
 
 class MatchingRepository {
-    val database = Firebase.database
-    val matchingItemsRef = database.getReference("matchingItems")
+    private val database = Firebase.database
+    private val usersRef = database.getReference("Users").child("users")
+    private val eventsRef = database.getReference("Users").child("events")
 
-    private suspend fun getAllMatchingItems(): List<MatchingItem> {
+    suspend fun getAllMatchingItems(): List<MatchingItem> {
         val items = mutableListOf<MatchingItem>()
-        val snapshot = matchingItemsRef.get().await()
-        for (data in snapshot.children) {
-            data.getValue(MatchingItem::class.java)?.let { items.add(it) }
+
+        val eventsSnapshot = eventsRef.get().await()
+        for (eventData in eventsSnapshot.children) {
+            val event = eventData.getValue(Event::class.java)
+            if (event != null) {
+                val userSnapshot = usersRef.child(event.user_id).get().await()
+                val user = userSnapshot.getValue(User::class.java)
+                if (user != null) {
+                    val matchingItem = MatchingItem(
+                        eventId = eventData.key ?: "",
+                        userId = event.user_id,
+                        name = user.name,
+                        gender = user.gender,
+                        profileMessage = user.profile_message,
+                        team = user.team,
+                        rating = user.rating,
+                        profileImageRes = user.profileImageRes,
+                        date = event.date,
+                        stadium = event.stadium,
+                        message = event.message,
+                        ticket = event.ticket
+                    )
+                    items.add(matchingItem)
+                }
+            }
         }
         return items
+
     }
 
     // 평점 필터(높은 순)
