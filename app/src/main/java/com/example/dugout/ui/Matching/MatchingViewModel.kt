@@ -26,6 +26,17 @@ class MatchingViewModel : ViewModel() {
         }
     }
 
+    fun loadAllItems() {
+        viewModelScope.launch {
+            try {
+                val items = repository.getAllMatchingItems()
+                _matchingItems.value = items
+            } catch (e: Exception) {
+                Log.e("MatchingViewModel", "Failed to load all items: ${e.message}")
+            }
+        }
+    }
+
     // 평점 낮은 순으로 정렬된 데이터 로드
     fun loadItemsByRatingAsc() {
         viewModelScope.launch {
