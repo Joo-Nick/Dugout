@@ -9,7 +9,20 @@
     <fragment
         android:id="@+id/navigation_matching"
         android:name="com.example.dugout.ui.Matching.MatchingFragment"
-        tools:layout="@layout/fragment_matching" />
+        tools:layout="@layout/fragment_matching">
+        <action
+        android:id="@+id/action_matchingFragment_to_matchingProfileFragment"
+        app:destination="@id/matchingProfileFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/matchingProfileFragment"
+        android:name="com.example.dugout.ui.Matching.MatchingProfileFragment"
+        android:label="Matching Profile">
+        <argument
+        android:name="item"
+        app:argType="com.example.dugout.ui.Matching.MatchingItem" />
+    </fragment>
 
     <!-- ProfileFragment 정의 -->
     <fragment
