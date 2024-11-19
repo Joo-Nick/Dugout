@@ -27,7 +27,8 @@
         </activity>
         <activity
             android:name=".ui.Chatting.ChattingActivity"
-            android:theme = "@style/AppTheme.Splash"/>
+            android:theme = "@style/Theme.Dugout">
+        </activity>
     </application>
 
 </manifest>
