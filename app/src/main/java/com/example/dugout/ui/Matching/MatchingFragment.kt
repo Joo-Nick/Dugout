@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dugout.MainActivity
 import com.example.dugout.R
@@ -42,11 +43,8 @@ class MatchingFragment : Fragment() {
 
     private fun setupRecyclerView(){
         adapter = MatchingAdapter(itemList) { item ->
-            val fragment = MatchingProfileFragment.newInstance(item)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, fragment)
-                .addToBackStack(null)
-                .commit()
+            val action = MatchingFragmentDirections.actionMatchingFragmentToMatchingProfileFragment(item)
+            findNavController().navigate(action)
         }
 
         binding.recyclerView.adapter = adapter
