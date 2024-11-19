@@ -11,7 +11,6 @@
         <item name="colorOnSecondary">@color/black</item>
     </style>
 
-    <style name="Theme.Activity" parent = "Theme.Dugout"></style>
 
     <style name="AppTheme.Splash" parent="Theme.SplashScreen">
         <item name = "windowSplashScreenBackground">@color/white</item>
