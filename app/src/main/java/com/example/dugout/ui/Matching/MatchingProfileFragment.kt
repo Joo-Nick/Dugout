@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.dugout.R
@@ -16,29 +18,8 @@ class MatchingProfileFragment : Fragment() {
 
     private var _binding: FragmentMatchingprofileBinding? = null
     private val binding get() = _binding!!
-    private lateinit var matchingItem: MatchingItem
-    private lateinit var viewModel: MatchingProfileViewModel
-
-    companion object {
-        private const val ARG_MATCHING_ITEM = "matching_item"
-
-        fun newInstance(item: MatchingItem): MatchingProfileFragment {
-            val fragment = MatchingProfileFragment()
-            val args = Bundle()
-            args.putParcelable(ARG_MATCHING_ITEM, item)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        matchingItem = arguments?.getParcelable(ARG_MATCHING_ITEM) ?: MatchingItem()
-
-        // ViewModel 초기화
-        viewModel = ViewModelProvider(this).get(MatchingProfileViewModel::class.java)
-        viewModel.setMatchingItem(matchingItem)
-    }
+    private val viewModel: MatchingProfileViewModel by viewModels()
+    private val args: MatchingProfileFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,10 +34,20 @@ class MatchingProfileFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
+        binding.reviewRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.reviewRecyclerView.adapter = ReviewAdapter(emptyList())
+
         // ViewModel 관찰하여 UI 업데이트
         observeViewModel()
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val userId = args.userId
+        viewModel.fetchUser(userId)
     }
 
     private fun observeViewModel() {
@@ -66,18 +57,29 @@ class MatchingProfileFragment : Fragment() {
             binding.profileTeam.text = "응원하는 팀: ${user.team}"
             binding.profileWinRate.text = "직관 승률: ${user.winRate}%"
             binding.profileReview.text = "평점: ${user.rating}점 (${user.reviewCount}명)"
-            binding.profileIntro.text = user.profileMessage
+            binding.profileIntro.text = user.profile_message
 
             // 프로필 이미지 설정 (필요한 경우)
             val resourceId = resources.getIdentifier(
                 user.profileImageRes,
                 "drawable",
-                context?.packageName
+                requireContext().packageName
             )
             Glide.with(this)
                 .load(resourceId)
                 .placeholder(R.drawable.leejoon)
                 .into(binding.profileImage)
+            if (resourceId != 0) { // 유효한 리소스 ID인지 확인
+                Glide.with(this)
+                    .load(resourceId)
+                    .placeholder(R.drawable.leejoon)
+                    .into(binding.profileImage)
+            } else {
+                // 리소스 ID가 유효하지 않을 경우 기본 이미지 사용
+                Glide.with(this)
+                    .load(R.drawable.leejoon)
+                    .into(binding.profileImage)
+            }
         }
 
         viewModel.reviews.observe(viewLifecycleOwner) { reviews ->

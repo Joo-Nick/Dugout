@@ -2,6 +2,7 @@ package com.example.dugout.ui.Matching
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,8 +43,9 @@ class MatchingFragment : Fragment() {
     }
 
     private fun setupRecyclerView(){
-        adapter = MatchingAdapter(itemList) { item ->
-            val action = MatchingFragmentDirections.actionMatchingFragmentToMatchingProfileFragment(item)
+        adapter = MatchingAdapter(itemList) { userId ->
+            val action = MatchingFragmentDirections.actionMatchingFragmentToMatchingProfileFragment(userId)
+            Log.d("RecyclerViewClick", "User ID clicked: $userId")
             findNavController().navigate(action)
         }
 
