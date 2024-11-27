@@ -17,9 +17,9 @@ class MatchingProfileViewModel : ViewModel() {
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> get() = _reviews
 
-    fun setMatchingItem(item: MatchingItem) {
-        loadUserData(item.userId)
-        loadReviews(item.userId)
+    fun fetchUser(userId: String) {
+        loadUserData(userId)
+        loadReviews(userId)
     }
 
     private fun loadUserData(userId: String) {
@@ -28,7 +28,15 @@ class MatchingProfileViewModel : ViewModel() {
                 val userProfile = repository.getUserProfile(userId)
                 _userData.value = userProfile
             } catch (e: Exception) {
-                // 에러 처리
+                _userData.value = UserProfile(
+                    name = "알 수 없음",
+                    team = "알 수 없음",
+                    rating = 0.0,
+                    profile_message = "정보가 없습니다.",
+                    profileImageRes = "default_profile",
+                    winRate = 0,
+                    reviewCount = 0
+                )
             }
         }
     }

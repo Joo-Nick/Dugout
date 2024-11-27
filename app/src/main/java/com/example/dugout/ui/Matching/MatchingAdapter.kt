@@ -2,6 +2,7 @@
 
     import android.annotation.SuppressLint
     import android.net.Uri
+    import android.util.Log
     import android.view.LayoutInflater
     import android.view.View
     import android.view.ViewGroup
@@ -11,7 +12,7 @@
     import com.bumptech.glide.Glide
     import com.example.dugout.R
 
-    class MatchingAdapter(private val itemList: List<MatchingItem>,private val itemClickListener: (MatchingItem) -> Unit) : RecyclerView.Adapter<MatchingAdapter.MatchingViewHolder>(){
+    class MatchingAdapter(private val itemList: List<MatchingItem>,private val itemClickListener: (String) -> Unit) : RecyclerView.Adapter<MatchingAdapter.MatchingViewHolder>(){
 
         inner class MatchingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val profileImage: ImageView = view.findViewById(R.id.profile_image)
@@ -40,7 +41,8 @@
                     .into(profileImage)
 
                 itemView.setOnClickListener{
-                    itemClickListener(item)
+                    Log.d("MatchingAdapter", "Clicked userId: ${item.userId}")
+                    itemClickListener(item.userId)
                 }
             }
         }
@@ -53,9 +55,6 @@
         override fun onBindViewHolder(holder: MatchingViewHolder, position: Int) {
             val item = itemList[position]
             holder.bind(item)
-            holder.itemView.setOnClickListener {
-                itemClickListener(item)
-            }
         }
 
         override fun getItemCount(): Int {
