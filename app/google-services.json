@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253899976981",
+    "project_id": "dugout-ea075",
+    "storage_bucket": "dugout-ea075.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253899976981:android:5bbfd8ca225147e963391c",
+        "android_client_info": {
+          "package_name": "com.example.dugout"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtBUk9CGvLT-45sJGGvDDyDCUsj9pAjEc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
