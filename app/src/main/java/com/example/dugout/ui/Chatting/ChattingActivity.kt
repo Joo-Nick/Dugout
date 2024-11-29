@@ -13,26 +13,28 @@ import com.google.firebase.database.FirebaseDatabase
 class ChattingActivity : AppCompatActivity() {
 
     private lateinit var chattingViewModel: ChattingViewModel
-    private lateinit var repository: ChattingRepository
     private lateinit var chattingAdapter: ChattingAdapter
     private lateinit var chattingRecyclerView: RecyclerView
     private lateinit var messageInput: EditText
     private lateinit var sendButton: Button
 
-    // 사용자 ID (예시로 직접 입력된 값)
-    private val userId = "user123"  // 실제 사용자의 ID를 Firebase Auth 등에서 가져오세요.
+    private lateinit var chatId: String // 전달받은 채팅 ID
+    private val userId = "user123" // 사용자 ID (예: Firebase Auth에서 가져옴)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chatting)
 
-        // Firebase 인스턴스 초기화
-        val database = FirebaseDatabase.getInstance()
-        repository = ChattingRepository(database)
+        // Intent로 전달받은 채팅 ID와 이름 가져오기
+        chatId = intent.getStringExtra("chatId") ?: ""
+        val chatName = intent.getStringExtra("chatName") ?: "채팅"
+
+        // 액션바 제목 설정
+        supportActionBar?.title = chatName
 
         // ViewModel 초기화
         chattingViewModel = ViewModelProvider(this).get(ChattingViewModel::class.java)
-        chattingViewModel.initialize(repository)
+        chattingViewModel.initialize(chatId)
 
         // RecyclerView 초기화
         chattingRecyclerView = findViewById(R.id.rcc_chatting)
@@ -47,6 +49,7 @@ class ChattingActivity : AppCompatActivity() {
         // 메시지 목록 관찰
         chattingViewModel.messages.observe(this) { messages ->
             chattingAdapter.setMessages(messages)
+            chattingRecyclerView.scrollToPosition(messages.size - 1) // 최신 메시지로 스크롤
         }
 
         // 보내기 버튼 클릭 시 메시지 전송
@@ -54,9 +57,8 @@ class ChattingActivity : AppCompatActivity() {
             val message = messageInput.text.toString().trim()
             if (message.isNotEmpty()) {
                 chattingViewModel.sendMessage(message, userId)
-                messageInput.setText("")  // 메시지 입력칸 초기화
+                messageInput.setText("") // 입력칸 초기화
             }
         }
     }
 }
-

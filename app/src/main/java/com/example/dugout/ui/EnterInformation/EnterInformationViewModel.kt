@@ -1,19 +1,28 @@
-package com.example.dugout.ui.EnterInformation
+package com.example.dugout.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.dugout.model.EnterInformation
+import com.example.dugout.repository.EnterInformationRepository
+import kotlinx.coroutines.launch
 
 class EnterInformationViewModel : ViewModel() {
+    private val repository = EnterInformationRepository()
 
-    private val _selectedDate = MutableLiveData<String>()
-    val selectedDate: LiveData<String> get() = _selectedDate
+    private val _enterInfoList = MutableLiveData<List<EnterInformation>>()
+    val enterInfoList: LiveData<List<EnterInformation>> get() = _enterInfoList
 
-    fun onDateSelected(year: Int, month: Int, day: Int) {
-        _selectedDate.value = "$year-${month + 1}-$day"
+    fun fetchEnterInformation() {
+        viewModelScope.launch {
+            _enterInfoList.value = repository.getEnterInformation()
+        }
     }
 
-    fun submitInformation(stadium: String, hasTicket: Boolean?, gender: String, date: Long) {
-        println("정보 등록: 경기장 = $stadium, 티켓 = $hasTicket, 성별 = $gender, 날짜 = $date")//
+    fun saveEnterInformation(info: EnterInformation) {
+        viewModelScope.launch {
+            repository.saveEnterInformation(info)
+        }
     }
 }

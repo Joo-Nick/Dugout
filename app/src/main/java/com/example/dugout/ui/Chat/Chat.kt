@@ -1,8 +1,10 @@
 package com.example.dugout.model
 
 data class Chat(
-    val name: String,
-    val message: String,
-    val time: String, //string
-    val profileImageResId: Int // 프로필 이미지의 리소스 ID
+    var id: String = "", // Firebase 고유 키
+    val name: String = "",
+    val message: String = "",
+    val time: String = "",
+    val profileImageRes: String = "",
+    var accepted: Boolean = false
 )

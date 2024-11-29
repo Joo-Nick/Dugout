@@ -39,8 +39,14 @@ class MatchingFragment : Fragment() {
         observeViewModel()
         matchingViewModel.loadAllItems()
 
+        // + 버튼 클릭 이벤트 추가
+        binding.floatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_matching_to_enterInformationFragment)
+        }
+
         return root
     }
+
 
     private fun setupRecyclerView(){
         adapter = MatchingAdapter(itemList) { userId ->

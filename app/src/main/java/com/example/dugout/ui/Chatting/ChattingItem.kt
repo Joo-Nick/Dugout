@@ -1,10 +1,8 @@
 package com.example.dugout.ui.Chatting
 
-import com.google.firebase.Timestamp
-
 data class ChattingItem(
-    val timestamp: Long,
-    val userId: String,
-    val message: String,
-    var isSentByCurrentUser: Boolean = false
+    val timestamp: Long = 0L,
+    val userId: String = "",
+    val message: String = "",
+    var isSentByCurrentUser: Boolean = false // UI 반영용
 )

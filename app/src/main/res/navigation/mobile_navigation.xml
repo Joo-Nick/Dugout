@@ -11,20 +11,24 @@
         android:name="com.example.dugout.ui.Matching.MatchingFragment"
         tools:layout="@layout/fragment_matching">
         <action
-        android:id="@+id/action_matchingFragment_to_matchingProfileFragment"
-        app:destination="@id/matchingProfileFragment"/>
+            android:id="@+id/action_matchingFragment_to_matchingProfileFragment"
+            app:destination="@id/matchingProfileFragment" />
+        <action
+            android:id="@+id/action_navigation_matching_to_enterInformationFragment"
+            app:destination="@id/enterInformationFragment" />
         <argument
             android:name="userId"
-            app:argType="string"/>
+            app:argType="string" />
     </fragment>
 
+    <!-- MatchingProfileFragment 정의 -->
     <fragment
         android:id="@+id/matchingProfileFragment"
         android:name="com.example.dugout.ui.Matching.MatchingProfileFragment"
         android:label="Matching Profile">
         <argument
-        android:name="userId"
-        app:argType= "string" />
+            android:name="userId"
+            app:argType="string" />
     </fragment>
 
     <!-- ProfileFragment 정의 -->
@@ -36,11 +40,9 @@
     <!-- ChatFragment 정의 -->
     <fragment
         android:id="@+id/navigation_chat"
-        android:name="com.example.dugout.ui.Chat.ChatFragment"
+        android:name="com.example.dugout.ui.chat.ChatFragment"
         android:label="@string/title_chat"
         tools:layout="@layout/fragment_chat">
-
-        <!-- ChatFragment에서 EnterInformationFragment로 이동하는 액션 추가 -->
         <action
             android:id="@+id/action_chatFragment_to_enterInformationFragment"
             app:destination="@id/enterInformationFragment" />
@@ -52,11 +54,12 @@
         android:name="com.example.dugout.ui.EnterInformation.EnterInformationFragment"
         android:label="Enter Information Fragment"
         tools:layout="@layout/fragment_enter_information">
-
-        <!-- EnterInformationFragment에서 ChatFragment로 돌아가는 액션 추가 -->
         <action
             android:id="@+id/action_enterInformationFragment_to_chatFragment"
             app:destination="@id/navigation_chat" />
+        <action
+            android:id="@+id/action_enterInformationFragment_to_navigation_matching"
+            app:destination="@id/navigation_matching" />
     </fragment>
 
 </navigation>

@@ -11,28 +11,20 @@ import com.google.firebase.database.ValueEventListener
 
 class ChattingRepository(private val database: FirebaseDatabase) {
 
-    // 메시지 목록을 가져오는 함수
-    fun getMessages(): LiveData<List<ChattingItem>> {
+    // 특정 채팅 ID에 해당하는 메시지 가져오기
+    fun getMessages(chatId: String): LiveData<List<ChattingItem>> {
         val liveData = MutableLiveData<List<ChattingItem>>()
+        val messagesRef: DatabaseReference = database.getReference("messages").child(chatId)
 
-        val messagesRef: DatabaseReference = database.getReference("messages")
-
-        messagesRef.orderByChild("timestamp") // timestamp 기준으로 정렬
+        messagesRef.orderByChild("timestamp")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val messages = mutableListOf<ChattingItem>()
 
                     for (childSnapshot in snapshot.children) {
-                        val timestamp = childSnapshot.child("timestamp").getValue(Long::class.java)
-                        val userId = childSnapshot.child("userId").getValue(String::class.java)
-                        val message = childSnapshot.child("message").getValue(String::class.java)
-
-                        if (timestamp != null && userId != null && message != null) {
-                            messages.add(ChattingItem(
-                                timestamp = timestamp,
-                                userId = userId,
-                                message = message
-                            ))
+                        val message = childSnapshot.getValue(ChattingItem::class.java)
+                        if (message != null) {
+                            messages.add(message)
                         }
                     }
 
@@ -47,19 +39,12 @@ class ChattingRepository(private val database: FirebaseDatabase) {
         return liveData
     }
 
-    // 새 메시지를 Realtime Database에 저장하는 함수
-    fun sendMessage(message: ChattingItem) {
-        val messagesRef: DatabaseReference = database.getReference("messages")
-        val newMessageRef = messagesRef.push()  // 고유한 ID로 새 메시지 추가
+    // 새 메시지 저장
+    fun sendMessage(chatId: String, message: ChattingItem) {
+        val messagesRef: DatabaseReference = database.getReference("messages").child(chatId)
+        val newMessageRef = messagesRef.push()
 
-        // 메시지 객체를 Map으로 변환해서 저장
-        val messageMap = mapOf(
-            "timestamp" to System.currentTimeMillis(),
-            "userId" to message.userId,
-            "message" to message.message
-        )
-
-        newMessageRef.setValue(messageMap)
+        newMessageRef.setValue(message)
             .addOnSuccessListener {
                 Log.d("ChattingRepository", "Message sent successfully!")
             }
@@ -68,8 +53,3 @@ class ChattingRepository(private val database: FirebaseDatabase) {
             }
     }
 }
-
-
-
-
-
