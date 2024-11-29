@@ -58,7 +58,6 @@ dependencies {
     implementation(libs.generativeai)
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.lifecycle.viewmodel.android)
-    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
