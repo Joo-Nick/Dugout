@@ -1,22 +1,24 @@
 package com.example.dugout.ui.Profile
 
+import android.net.Uri
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class ProfileViewModel : ViewModel() {
-    private val _profile = MutableLiveData<ProfileItem?>() // null 가능하도록 설정
+    private val _profile = MutableLiveData<ProfileItem?>()
     val profile: LiveData<ProfileItem?> get() = _profile
 
-    private val repository = ProfileRepository()
 
     private val _profileUpdateStatus = MutableLiveData<String>()
     val profileUpdateStatus: LiveData<String> get() = _profileUpdateStatus
 
-    // Firebase에서 프로필 정보를 가져오는 함수 (user1만)
+    private val repository = ProfileRepository()
+
     fun fetchProfile() {
         repository.getProfile { profile ->
-            _profile.value = profile // 단일 프로필을 LiveData에 설정
+            _profile.value = profile
         }
     }
 
@@ -30,5 +32,15 @@ class ProfileViewModel : ViewModel() {
             rating = ""
         )
         repository.sendProfile(newProfile)
+    }
+
+    fun uploadProfileImage(uri: Uri, onUploadComplete: (String) -> Unit) {
+        repository.uploadImage(uri) { imageUrl ->
+            if (imageUrl != null) {
+                onUploadComplete(imageUrl)
+            } else {
+                _profileUpdateStatus.value = "이미지 업로드 실패"
+            }
+        }
     }
 }

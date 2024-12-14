@@ -1,6 +1,10 @@
 package com.example.dugout.ui.Profile
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +13,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.dugout.R
 import com.example.dugout.databinding.FragmentProfileBinding
+import com.google.firebase.storage.FirebaseStorage
 
 class ProfileFragment : Fragment() {
 
@@ -28,6 +35,8 @@ class ProfileFragment : Fragment() {
     private lateinit var edtProfileMessage: EditText
     private lateinit var txtRating: TextView
     private lateinit var imgProfileImage: ImageView
+    private lateinit var imgPickerLauncher: ActivityResultLauncher<Intent>
+    private var selectedImageUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +47,6 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // 바인딩 초기화
         btnSave = binding.btnSave
         edtName = binding.edtName
         edtTeam = binding.edtTeam
@@ -46,35 +54,52 @@ class ProfileFragment : Fragment() {
         txtRating = binding.txtRating
         imgProfileImage = binding.imgProfile
 
+        imgPickerLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // 선택한 이미지의 URI 가져오기
+                selectedImageUri = result.data?.data
+                if (selectedImageUri != null) {
+                    // URI를 ImageView에 로드
+                    Glide.with(requireContext())
+                        .load(selectedImageUri)
+                        .placeholder(R.drawable.dambi) // 로드 중 표시될 이미지
+                        .error(R.drawable.leejoon) // 로드 실패 시 표시될 이미지
+                        .into(imgProfileImage)
+                } else {
+                    Toast.makeText(requireContext(), "이미지를 선택하지 못했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(requireContext(), "이미지 선택이 취소되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
 
-        // ViewModel에서 프로필 데이터 가져오기
+        binding.imgProfile.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            imgPickerLauncher.launch(intent)
+        }
+
         profileViewModel.fetchProfile()
 
         // LiveData 옵저빙하여 데이터가 변경될 때마다 UI 업데이트
         profileViewModel.profile.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                // Firebase에서 가져온 데이터를 UI에 반영
                 edtName.setText(it.name)
                 edtTeam.setText(it.team)
                 edtProfileMessage.setText(it.profile_message)
                 txtRating.text = it.rating
 
-                val imageResId = resources.getIdentifier(
-                    it.profileImageRes,
-                    "drawable",
-                    requireContext().packageName
-                )
-
-                if (imageResId != 0) {
-                    // 리소스 ID가 존재하면 이미지를 로드
+                if (it.profileImageRes.isNotEmpty()) {
                     Glide.with(requireContext())
-                        .load(imageResId)  // drawable 리소스 ID로 이미지를 로드
+                        .load(it.profileImageRes)
+                        .placeholder(R.drawable.hajiwon)
+                        .error(R.drawable.koojawook)
                         .into(imgProfileImage)
+                    Log.d("ProfileFragment", "Profile Image URL: ${it.profileImageRes}")
                 } else {
-                    // 기본 이미지로 대체 (리소스가 없을 경우)
-                    Glide.with(requireContext())
-                        .load(R.drawable.yoon_small)  // 기본 이미지 리소스 사용
-                        .into(imgProfileImage)
+                    imgProfileImage.setImageResource(R.drawable.yoon_small)
                 }
             }
         }
@@ -85,19 +110,15 @@ class ProfileFragment : Fragment() {
             val team = edtTeam.text.toString()
             val profileMessage = edtProfileMessage.text.toString()
 
-            if (name.isEmpty() || team.isEmpty() || profileMessage.isEmpty()) {
-                Toast.makeText(requireContext(), "모든 필드를 채워주세요.", Toast.LENGTH_SHORT).show()
-            } else {
-                // Firebase로 데이터 전송
-                profileViewModel.sendProfile(name, "", profileMessage, team)
-
-                // 상태 업데이트를 옵저빙하여 Toast로 알림
-                profileViewModel.profileUpdateStatus.observe(viewLifecycleOwner) { status ->
-                    Toast.makeText(requireContext(), status, Toast.LENGTH_SHORT).show()
+            if (selectedImageUri != null) {
+                profileViewModel.uploadProfileImage(selectedImageUri!!) { imageUrl ->
+                    profileViewModel.sendProfile(name, imageUrl, profileMessage, team)
                 }
+            } else {
+                val currentImageUrl = profileViewModel.profile.value?.profileImageRes ?: ""
+                profileViewModel.sendProfile(name, currentImageUrl, profileMessage, team)
             }
         }
-
         return root
     }
 
