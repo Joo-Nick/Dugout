@@ -5,64 +5,91 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- 상단에 뒤로 가기 버튼이 포함된 LinearLayout -->
     <LinearLayout
         android:id="@+id/activity_chatting"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="16dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="290dp">
 
+        <!-- 뒤로가기 버튼 -->
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:rotationY="180"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="start"
+            android:src="@drawable/ic_action_name"
+            android:contentDescription="뒤로가기"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <!-- 사용자 프로필 정보 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="100dp"
-                android:layout_height="80sp"
-                app:srcCompat="@drawable/yoon_small" />
+                android:id="@+id/iv_you"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="프로필 이미지"
+                android:scaleType="centerCrop"/>
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/tv_you"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
                 android:text="윤동희"
                 android:textSize="20sp"
-                android:textStyle="bold" />
-
+                android:textStyle="bold"
+                android:layout_weight="1" />
         </LinearLayout>
 
+        <!-- 채팅 메시지 RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcc_chatting"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="16dp" />
+            android:paddingBottom="16dp" />
 
+        <!-- 메시지 입력 및 전송 버튼 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp">
 
             <EditText
                 android:id="@+id/edt_input"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="text"
-                android:hint= "메세지를 입력하세요" />
+                android:hint="메세지를 입력하세요"
+                android:padding="12dp"
+                android:background="@color/lavender" />
 
             <Button
                 android:id="@+id/btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="전송" />
+                android:text="전송"
+                android:layout_marginStart="12dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_vertical"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

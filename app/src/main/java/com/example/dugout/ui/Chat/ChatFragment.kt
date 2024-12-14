@@ -30,14 +30,13 @@ class ChatFragment : Fragment() {
         _binding = FragmentChatBinding.inflate(inflater, container, false)
         chatViewModel = ViewModelProvider(this).get(ChatViewModel::class.java)
 
-        setupAdapters() // Adapters 초기화 및 RecyclerView 설정
-        observeViewModel() // LiveData 관찰
+        setupAdapters()
+        observeViewModel()
 
         return binding.root
     }
 
     private fun setupAdapters() {
-        // AcceptedChats 어댑터
         chatAcceptedAdapter = ChatAcceptedAdapter(emptyList()) { chat ->
             val intent = Intent(requireContext(), ChattingActivity::class.java)
             intent.putExtra("chatId", chat.id)
@@ -49,7 +48,6 @@ class ChatFragment : Fragment() {
             adapter = chatAcceptedAdapter
         }
 
-        // ChatRequests 어댑터
         chatRequestAdapter = ChatRequestAdapter(emptyList()) { request, isAccepted ->
             if (isAccepted) {
                 chatViewModel.acceptRequest(request)
@@ -73,4 +71,8 @@ class ChatFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

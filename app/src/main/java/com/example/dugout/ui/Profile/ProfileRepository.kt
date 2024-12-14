@@ -1,5 +1,6 @@
 package com.example.dugout.ui.Profile
 
+import android.net.Uri
 import android.provider.ContactsContract.Profile
 import android.util.Log
 import com.google.firebase.database.DatabaseReference
@@ -10,13 +11,15 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class ProfileRepository() {
-    val database = Firebase.database
-    val profileRef: DatabaseReference = database.getReference("Users").child("users").child("user1")
+    private val database: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child("user1")
+    private val storage: StorageReference = FirebaseStorage.getInstance().getReference("profile_images")
 
     fun getProfile(callback: (ProfileItem?) -> Unit) {
-        profileRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val name = snapshot.child("name").getValue(String::class.java)
                 val profileImageRes = snapshot.child("profileImageRes").getValue(String::class.java)
@@ -32,36 +35,45 @@ class ProfileRepository() {
                         gender = "",
                         rating = ""
                     )
-                    callback(profileItem) // 단일 프로필 반환
+                    callback(profileItem)
                 } else {
-                    callback(null) // 데이터가 없으면 null 반환
+                    callback(null)
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("ProfileRepository", "Failed to read value.", error.toException())
-                callback(null) // 오류 발생 시 null 반환
+                callback(null)
             }
         })
     }
 
 
     fun sendProfile(profile: ProfileItem) {
-        val profileUpdate = mapOf(
+        val profileData = mapOf(
             "name" to profile.name,
             "profileImageRes" to profile.profileImageRes,
             "profile_message" to profile.profile_message,
             "team" to profile.team
         )
 
-        profileRef.updateChildren(profileUpdate).addOnCompleteListener { task ->
+        database.updateChildren(profileData).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                // 성공적으로 프로필이 업데이트됨
                 Log.d("sendprofile", "Profile updated successfully!")
             } else {
-                // 업데이트 실패 시
                 Log.e("sendprofile", "Profile update failed", task.exception)
             }
         }
     }
-}
+        fun uploadImage(uri: Uri, onUploadComplete: (String?) -> Unit) {
+            val fileRef = storage.child(System.currentTimeMillis().toString() + ".jpg")
+            fileRef.putFile(uri).addOnSuccessListener {
+                fileRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    onUploadComplete(downloadUrl.toString())
+                }
+            }.addOnFailureListener {
+                Log.e("ProfileRepository", "Image upload failed.", it)
+                onUploadComplete(null)
+            }
+        }
+    }
