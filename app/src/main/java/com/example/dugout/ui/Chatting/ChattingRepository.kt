@@ -3,18 +3,11 @@ package com.example.dugout.ui.Chatting
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.dugout.ui.Matching.Event
-import com.example.dugout.ui.Matching.MatchingItem
-import com.example.dugout.ui.Matching.User
-import com.example.dugout.ui.Matching.UserProfile
-import com.example.dugout.ui.Profile.ProfileItem
-import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.database
 import kotlinx.coroutines.tasks.await
 
 class ChattingRepository(private val database: FirebaseDatabase) {

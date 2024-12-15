@@ -8,9 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -20,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.dugout.R
 import com.example.dugout.databinding.FragmentProfileBinding
-import com.google.firebase.storage.FirebaseStorage
 
 class ProfileFragment : Fragment() {
 
@@ -30,7 +31,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
 
     private lateinit var btnSave: Button
-    private lateinit var edtTeam: EditText
+    private lateinit var spinnerTeam: Spinner
     private lateinit var edtName: EditText
     private lateinit var edtProfileMessage: EditText
     private lateinit var txtRating: TextView
@@ -38,6 +39,7 @@ class ProfileFragment : Fragment() {
     private lateinit var imgPickerLauncher: ActivityResultLauncher<Intent>
     private var selectedImageUri: Uri? = null
 
+    private val teamList = listOf("롯데 자이언츠", "삼성 라이온즈", "두산 베어스", "SSG 랜더스", "키움 히어로즈", "한화 이글스", "NC 다이노스", "Kt 위즈", "LG트윈스", "KIA 타이거즈")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,10 +51,14 @@ class ProfileFragment : Fragment() {
 
         btnSave = binding.btnSave
         edtName = binding.edtName
-        edtTeam = binding.edtTeam
+        spinnerTeam = binding.teamSpinner
         edtProfileMessage = binding.edtProfileMessage
         txtRating = binding.txtRating
         imgProfileImage = binding.imgProfile
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, teamList)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerTeam.adapter = adapter
 
         imgPickerLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -87,9 +93,13 @@ class ProfileFragment : Fragment() {
         profileViewModel.profile.observe(viewLifecycleOwner) { profile ->
             profile?.let {
                 edtName.setText(it.name)
-                edtTeam.setText(it.team)
                 edtProfileMessage.setText(it.profile_message)
-                txtRating.text = it.rating
+                txtRating.text = it.rating.toString()
+
+                val selectedTeamPosition = teamList.indexOf(it.team)
+                if (selectedTeamPosition >= 0) {
+                    spinnerTeam.setSelection(selectedTeamPosition)
+                }
 
                 if (it.profileImageRes.isNotEmpty()) {
                     Glide.with(requireContext())
@@ -107,7 +117,7 @@ class ProfileFragment : Fragment() {
         // Save 버튼 클릭 시
         btnSave.setOnClickListener {
             val name = edtName.text.toString()
-            val team = edtTeam.text.toString()
+            val team = spinnerTeam.selectedItem.toString()
             val profileMessage = edtProfileMessage.text.toString()
 
             if (selectedImageUri != null) {

@@ -9,8 +9,6 @@ class VerticalItemSpacingDecoration(private val verticalSpacing: Int) : Recycler
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-
-        // 위와 아래 간격만 설정
         outRect.top = verticalSpacing
         outRect.bottom = verticalSpacing
     }
