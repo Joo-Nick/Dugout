@@ -1,7 +1,6 @@
 package com.example.dugout.ui.Profile
 
 import android.net.Uri
-import androidx.compose.ui.text.LinkAnnotation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,7 +28,7 @@ class ProfileViewModel : ViewModel() {
             profile_message = profile_message,
             team = team,
             gender = "",
-            rating = ""
+            rating = 0.0
         )
         repository.sendProfile(newProfile)
     }

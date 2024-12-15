@@ -5,6 +5,6 @@ data class ProfileItem(
     val name: String,
     val profileImageRes: String,
     val profile_message: String,
-    val rating: String,
+    val rating: Double,
     val team: String
 )
